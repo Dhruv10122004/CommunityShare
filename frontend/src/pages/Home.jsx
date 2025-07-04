@@ -10,10 +10,9 @@ function Home() {
   const [showCatModal, setShowCatModal] = useState(false);
   const [newCat, setNewCat] = useState({ name: '', description: '' });
   const [catError, setCatError] = useState('');
-  const { user } = useAuth();
+  const { user, logout } = useAuth(); // <- Get logout function
   const navigate = useNavigate();
 
-  // Fetch categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -26,7 +25,6 @@ function Home() {
     fetchCategories();
   }, []);
 
-  // Fetch items when selectedCategory changes
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -42,11 +40,9 @@ function Home() {
     fetchItems();
   }, [selectedCategory]);
 
-  // Handle create category
   const handleCreateCategory = async (e) => {
     e.preventDefault();
     setCatError('');
-    // Check for duplicate (case-insensitive)
     if (categories.some(cat => cat.name.toLowerCase() === newCat.name.trim().toLowerCase())) {
       setCatError('Category already exists.');
       return;
@@ -57,9 +53,9 @@ function Home() {
       setShowCatModal(false);
       setNewCat({ name: '', description: '' });
     } catch (err) {
-      if (err.response && err.response.status === 401) {
+      if (err.response?.status === 401) {
         setCatError('You are not authorized. Please log in to create a category.');
-      } else if (err.response && err.response.status === 409) {
+      } else if (err.response?.status === 409) {
         setCatError('Category already exists.');
       } else {
         setCatError('Failed to create category');
@@ -68,41 +64,64 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-amber-50 to-blue-100 py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 relative">
+
+      {/* 🔒 Logout button when user is logged in */}
+      {user && (
+        <div className="absolute top-6 right-6">
+          <button
+            onClick={() => {
+              logout();
+              navigate('/');
+            }}
+            className="px-4 py-2 rounded-lg bg-slate-700 text-white font-medium hover:bg-slate-800 transition-colors duration-200 shadow-sm"
+          >
+            Logout
+          </button>
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-12">
           <div className="flex items-center gap-4">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-blue-900 drop-shadow whitespace-nowrap">
+            <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 whitespace-nowrap">
               Browse by Category
             </h1>
             <select
-              className="ml-2 px-4 py-2 rounded border border-blue-300 bg-white text-blue-700 font-semibold shadow focus:outline-none focus:ring-2 focus:ring-blue-200"
+              className="ml-4 px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
             >
-              <option value="">All</option>
+              <option value="">All Categories</option>
               {categories.map(cat => (
                 <option key={cat.id} value={cat.id}>{cat.name}</option>
               ))}
             </select>
             <button
               onClick={() => setShowCatModal(true)}
-              className="ml-2 px-4 py-2 rounded border border-green-600 text-green-600 font-semibold bg-white hover:bg-green-50 shadow transition-all duration-200"
+              className="ml-3 px-4 py-2 rounded-lg border border-emerald-300 text-emerald-700 font-medium bg-white hover:bg-emerald-50 transition-colors duration-200 shadow-sm"
             >
               + Create Category
             </button>
+            <button
+              onClick={() => navigate('/post-item')}
+              className="ml-3 px-4 py-2 rounded-lg border border-blue-300 text-blue-700 font-medium bg-white hover:bg-blue-50 transition-colors duration-200 shadow-sm"
+            >
+              + Add New Item
+            </button>
           </div>
+
           {!user && (
-            <div className="flex gap-2 mt-4 sm:mt-0">
+            <div className="flex gap-3 mt-6 sm:mt-0">
               <button
                 onClick={() => navigate('/register')}
-                className="px-4 py-2 rounded bg-green-500 text-white font-semibold hover:bg-blue-600 shadow"
+                className="px-6 py-2 rounded-lg bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors duration-200 shadow-sm"
               >
                 Register
               </button>
               <button
                 onClick={() => navigate('/login')}
-                className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-green-600 shadow"
+                className="px-6 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm"
               >
                 Login
               </button>
@@ -112,38 +131,38 @@ function Home() {
 
         {/* Modal for creating category */}
         {showCatModal && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 animate-fade-in">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <form
               onSubmit={handleCreateCategory}
-              className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm flex flex-col gap-4 border"
+              className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md flex flex-col gap-5 border border-slate-200"
             >
-              <h2 className="text-2xl font-bold mb-2 text-green-700 text-center">Create New Category</h2>
-              {catError && <p className="text-red-500 text-sm text-center">{catError}</p>}
+              <h2 className="text-2xl font-bold mb-2 text-slate-800 text-center">Create New Category</h2>
+              {catError && <p className="text-red-600 text-sm text-center bg-red-50 p-2 rounded">{catError}</p>}
               <input
                 type="text"
-                placeholder="Name"
-                className="border p-2 rounded focus:ring-2 focus:ring-green-200"
+                placeholder="Category Name"
+                className="border border-slate-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
                 value={newCat.name}
                 onChange={e => setNewCat({ ...newCat, name: e.target.value })}
                 required
               />
               <textarea
                 placeholder="Description"
-                className="border p-2 rounded focus:ring-2 focus:ring-green-200"
+                className="border border-slate-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-20 shadow-sm"
                 value={newCat.description}
                 onChange={e => setNewCat({ ...newCat, description: e.target.value })}
                 required
               />
-              <div className="flex gap-2 mt-2 justify-center">
+              <div className="flex gap-3 mt-3 justify-center">
                 <button
                   type="submit"
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-semibold"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 shadow-sm"
                 >
                   Create
                 </button>
                 <button
                   type="button"
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded font-semibold"
+                  className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-6 py-2 rounded-lg font-medium transition-colors duration-200"
                   onClick={() => setShowCatModal(false)}
                 >
                   Cancel
@@ -153,37 +172,37 @@ function Home() {
           </div>
         )}
 
-        <h2 className="text-2xl font-bold mb-6 text-blue-800 text-center">
+        <h2 className="text-2xl font-bold mb-8 text-slate-700 text-center">
           {selectedCategory
             ? `Items in "${categories.find((c) => String(c.id) === String(selectedCategory))?.name || ''}"`
             : 'All Community Items'}
         </h2>
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {items.map((item) => (
-            <div key={item.id} className="border rounded-2xl p-4 bg-white shadow-lg hover:shadow-2xl transition-all duration-200 flex flex-col">
+            <div key={item.id} className="border border-slate-200 rounded-xl p-6 bg-white shadow-md hover:shadow-lg transition-all duration-300 flex flex-col hover:translate-y-[-2px]">
               <img
                 src={item.image_url || '/placeholder.png'}
                 alt={item.title}
-                className="w-full h-40 object-cover rounded-xl mb-2"
+                className="w-full h-40 object-cover rounded-lg mb-4"
               />
-              <h2 className="text-xl font-semibold mt-2 text-blue-900">{item.title}</h2>
-              <p className="text-sm text-gray-600 flex-1">
+              <h2 className="text-xl font-bold mt-2 text-slate-800">{item.title}</h2>
+              <p className="text-sm text-slate-600 flex-1 mt-2">
                 {item.description?.slice(0, 80)}...
               </p>
-              <div className="mb-3">
-                <span className="text-xl font-semibold text-blue-700">
+              <div className="mb-4 mt-3">
+                <span className="text-xl font-bold text-slate-800">
                   ₹{item.price_per_day}
                 </span>
-                <span className="text-sm text-gray-500 ml-1">per day</span>
+                <span className="text-sm text-slate-500 ml-1">per day</span>
               </div>
               {item.availability_status === 'available' && (
-                <p className="text-green-600 font-medium mt-2">
-                  ✔ Available to borrow
+                <p className="text-green-700 font-medium mt-2 text-sm">
+                  ✓ Available to borrow
                 </p>
               )}
               <Link
                 to={`/items/${item.id}`}
-                className="inline-block mt-3 px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition"
+                className="inline-block mt-4 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors duration-200 text-center shadow-sm"
               >
                 View Details
               </Link>
@@ -191,7 +210,7 @@ function Home() {
           ))}
         </div>
         {items.length === 0 && (
-          <p className="text-center text-gray-500 mt-8">No items found in this category.</p>
+          <p className="text-center text-slate-500 mt-12 text-lg">No items found in this category.</p>
         )}
       </div>
     </div>
