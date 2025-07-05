@@ -6,6 +6,7 @@ import Messages from './pages/Messages';
 import Chat from './pages/Chat';
 import ItemDetails from './pages/ItemDetails';
 import PostItem from './pages/PostItem'
+import MyListings from './pages/MyListings';
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
       <Route path="/messages" element={<Messages />} />
       <Route path="/messages/:userId" element={<Chat />} />
       <Route path="/items/:id" element={<ItemDetails />} />
-      <Route path="/post-item" element={<PostItem />}></Route>
+      <Route path="/post-item" element={<PostItem />} />
+      <Route path="/my-listings" element={<MyListings />} />
     </Routes>
   )
 };

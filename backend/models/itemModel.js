@@ -46,8 +46,12 @@ exports.getAll = async () => {
 exports.getItemsByCategoryId = async (categoryId) => {
     const res = await pool.query('select * from items where category_id = $1', [categoryId]);
     return res.rows;
-}
+};
 
 exports.getItemByid = async (itemId) => {
     return await pool.query('select * from items where id = $1', [itemId]);
-}
+};
+
+exports.getItemByOwnerIdListed = async (ownerId) => {
+    return await pool.query('select * from items where ownerId = $1', [ownerId]);
+};
