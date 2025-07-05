@@ -70,6 +70,12 @@ function Home() {
       {user && (
         <div className="absolute top-6 right-6">
           <button
+            onClick={() => navigate('/my-listings')}
+            className="ml-2 px-4 py-2 rounded border border-purple-600 text-purple-600 font-semibold bg-white hover:bg-purple-50 shadow transition-all duration-200 mr-2"
+          >
+            My Listings
+          </button>
+          <button
             onClick={() => {
               logout();
               navigate('/');
