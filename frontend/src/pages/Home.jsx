@@ -10,7 +10,7 @@ function Home() {
   const [showCatModal, setShowCatModal] = useState(false);
   const [newCat, setNewCat] = useState({ name: '', description: '' });
   const [catError, setCatError] = useState('');
-  const { user, logout } = useAuth(); // <- Get logout function
+  const { user, logout, token } = useAuth(); // <- Get logout function
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +48,11 @@ function Home() {
       return;
     }
     try {
-      const res = await axios.post('/api/categories', newCat);
+      const res = await axios.post('/api/categories', newCat, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setCategories([...categories, res.data]);
       setShowCatModal(false);
       setNewCat({ name: '', description: '' });

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,22 @@ function PostItem() {
         image_url: ''
     });
 
+    const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
+    const { token } = useAuth();
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get('/api/categories');
+                setCategories(res.data);
+            } catch (err) {
+                console.error('Failed to load categories', err);
+            }
+        };
+        fetchCategories();
+    }, []);
+
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
@@ -26,7 +41,11 @@ function PostItem() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/items', formData);
+            await axios.post('/api/items', formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             navigate('/');
         } catch (err) {
             console.error('Item submission failed', err);
@@ -39,7 +58,18 @@ function PostItem() {
             <form onSubmit={handleSubmit} className="space-y-4">
                 <input name="title" placeholder="Title" onChange={handleChange} className="w-full border p-2" required />
                 <textarea name="description" placeholder="Description" onChange={handleChange} className="w-full border p-2" required />
-                <input name="category_id" placeholder="Category ID" onChange={handleChange} className="w-full border p-2" required />
+                <select
+                    name="category_id"
+                    value={formData.category_id}
+                    onChange={handleChange}
+                    className="w-full border p-2"
+                    required
+                >
+                    <option value="">Select Category</option>
+                    {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
+                </select>
                 <input name="price_per_day" placeholder="Price per day (₹)" onChange={handleChange} className="w-full border p-2" />
                 <label className="flex items-center gap-2">
                     <input type="checkbox" name="is_free" checked={formData.is_free} onChange={handleChange} /> Free

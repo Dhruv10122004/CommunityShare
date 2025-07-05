@@ -20,29 +20,36 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const res = await axios.post('/api/auth/login', { email, password }); // this is sending the email and password to the backend for authentication
+    const res = await axios.post('/api/auth/login', { email, password });
     if (res.data.token && res.data.user) {
       setUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
+      localStorage.setItem('token', res.data.token); // Store token
     }
   };
 
   const register = async (userData) => {
-    const res = await axios.post('/api/auth/register', userData); // this is sending the user data to the backend for registration
+    const res = await axios.post('/api/auth/register', userData);
     if (res.data.token && res.data.user) {
       setUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
+      localStorage.setItem('token', res.data.token); // Store token
     }
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('token'); // Remove token
   };
 
+  // Optionally, provide the token for convenience
+  const token = localStorage.getItem('token');
+
   return (
-    <AuthContext.Provider value={{ // this will render the child components wrapped in this AuthProvider with the user state and methods
+    <AuthContext.Provider value={{
       user,
+      token,
       login,
       register,
       logout
@@ -52,4 +59,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext); // this is a custom hook to use the AuthContext in any component
+export const useAuth = () => useContext(AuthContext);
