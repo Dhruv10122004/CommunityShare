@@ -68,7 +68,8 @@ function ItemDetails() {
                         )}
                     </div>
 
-                    {user && user.user.id !== item.owner_id && (
+                    {user && item && user?.user?.id !== item.owner_id
+ && (
                         <Link
                             to={`/messages/${item.owner_id}`}
                             className="mt-6 inline-block text-center bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition"
@@ -76,6 +77,7 @@ function ItemDetails() {
                             Contact Owner
                         </Link>
                     )}
+
                 </div>
             </div>
         </div>

@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function MyListings() {
     const [items, setItems] = useState([]);
+    const { token } = useAuth();
 
     useEffect(() => {
         const fetchMyItems = async () => {
             try {
-                const res = await axios.get('/api/items/mylisted');
+                const res = await axios.get('/api/items/mylisted', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 setItems(res.data);
             } catch (err) {
                 console.error('Error fetching your items', err);

@@ -61,6 +61,7 @@ exports.getItemById = async (req, res) => {
 exports.getMyListedItems = async (req, res) => {
     try {
         const result = await itemModel.getItemByOwnerIdListed(req.user.id);
+        return res.status(201).json(result.rows);
     } catch (err) {
         res.status(500).json({ message: err.message })
     }

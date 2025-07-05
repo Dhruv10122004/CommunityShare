@@ -18,7 +18,7 @@ function App() {
       <Route path="/messages/:userId" element={<Chat />} />
       <Route path="/items/:id" element={<ItemDetails />} />
       <Route path="/post-item" element={<PostItem />} />
-      <Route path="/my-listings" element={<MyListings />} />
+      {/* <Route path="/mylisted" element={<MyListings />} /> */}
     </Routes>
   )
 };
