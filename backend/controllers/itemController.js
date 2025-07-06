@@ -58,11 +58,15 @@ exports.getItemById = async (req, res) => {
     }
 }
 
-exports.getMyListedItems = async (req, res) => {
-    try {
-        const result = await itemModel.getItemByOwnerIdListed(req.user.id);
-        return res.status(201).json(result.rows);
-    } catch (err) {
-        res.status(500).json({ message: err.message })
-    }
-}
+// Get all items listed by the current user
+exports.getMyListings = async (req, res) => {
+  try {
+    const userId = req.user.id; // From JWT
+    const items = await itemModel.getItemByOwnerIdListed(userId);
+    // console.log("🟡 getItemByOwnerIdListed returned:", items); // <-- debug this
+    res.json(items.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error while fetching user listings' });
+  }
+};

@@ -53,5 +53,5 @@ exports.getItemByid = async (itemId) => {
 };
 
 exports.getItemByOwnerIdListed = async (ownerId) => {
-    return await pool.query('select * from items where ownerId = $1', [ownerId]);
+    return await pool.query('select * from items where owner_id = $1', [ownerId]);
 };

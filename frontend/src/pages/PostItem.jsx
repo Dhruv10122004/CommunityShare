@@ -73,7 +73,18 @@ function PostItem() {
                 </select>
                 <input name="price_per_day" placeholder="Price per day (₹)" onChange={handleChange} className="w-full border p-2" />
                 <label className="flex items-center gap-2">
-                    <input type="checkbox" name="is_free" checked={formData.is_free} onChange={handleChange} /> Free
+                    <input
+                        type="checkbox"
+                        name="availability_status"
+                        checked={formData.availability_status === 'available'}
+                        onChange={(e) =>
+                            setFormData(prev => ({
+                                ...prev,
+                                availability_status: e.target.checked ? 'available' : 'unavailable'
+                            }))
+                        }
+                    /> Free to borrow
+
                 </label>
                 <select name="condition" value={formData.condition} onChange={handleChange} className="w-full border p-2">
                     <option value="new">New</option>
