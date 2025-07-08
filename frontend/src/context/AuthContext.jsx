@@ -1,16 +1,8 @@
-/*
-Making this AuthContext to manage user authentication state across the application.
-This context will provide methods for login, registration, and logout, and will store the user state
-in localStorage to persist the session.
-It helps us avoid prop drilling and makes the user state accessible throughout the app.
-*/
-import { createContext, useContext, useState, useEffect } from "react";
-import axios from 'axios';
-
-const AuthContext = createContext();
+import { useNavigate } from 'react-router-dom'; // At the top
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate(); // 👈 required for redirection
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -19,12 +11,28 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  // ⬇️ Axios interceptor to auto-logout on token expiry/invalid
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      response => response,
+      error => {
+        if (error.response?.status === 401) {
+          logout();
+          navigate('/login');
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => axios.interceptors.response.eject(interceptor);
+  }, []);
+
   const login = async (email, password) => {
     const res = await axios.post('/api/auth/login', { email, password });
     if (res.data.token && res.data.user) {
       setUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      localStorage.setItem('token', res.data.token); // Store token
+      localStorage.setItem('token', res.data.token);
     }
   };
 
@@ -33,19 +41,17 @@ export const AuthProvider = ({ children }) => {
     if (res.data.token && res.data.user) {
       setUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
-      localStorage.setItem('token', res.data.token); // Store token
+      localStorage.setItem('token', res.data.token);
     }
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
-    localStorage.removeItem('token'); // Remove token
-    delete axios.defaults.headers.common['Authorization']; // But after logout, if you don’t remove it manually, Axios will continue sending that stale token — even though your app has “logged out.”
-    // we had to use this line because in app.jsx we were sending header tokens with every request so to prevent the same after logout this is used
+    localStorage.removeItem('token');
+    delete axios.defaults.headers.common['Authorization'];
   };
 
-  // Optionally, provide the token for convenience
   const token = localStorage.getItem('token');
 
   return (
@@ -60,5 +66,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);
