@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -11,6 +11,8 @@ function Home() {
   const [newCat, setNewCat] = useState({ name: '', description: '' });
   const [catError, setCatError] = useState('');
   const { user, logout, token } = useAuth();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const timeoutRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,26 +67,63 @@ function Home() {
     }
   };
 
+  const handleMouseEnter = () => {
+    clearTimeout(timeoutRef.current);
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsDropdownOpen(false);
+    }, 200);
+  };
+
   return (
     <div className="min-h-screen bg-[#F3F4E8] py-8 relative">
-
       {user && (
-        <div className="absolute top-6 right-6">
-          <button
-            onClick={() => navigate('/my-listings')}
-            className="ml-2 px-4 py-2 rounded border border-[#819A91] text-[#819A91] font-semibold bg-white hover:bg-[#D4DBC1] shadow transition-all duration-200 mr-2"
-          >
-            My Listings
-          </button>
-          <button
-            onClick={() => {
-              logout();
-              navigate('/');
-            }}
-            className="px-4 py-2 rounded-lg bg-[#819A91] text-white font-medium hover:bg-[#6d857f] transition-colors duration-200 shadow-sm"
-          >
-            Logout
-          </button>
+        <div
+          className="absolute top-6 right-6"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="relative">
+            <button
+              className="w-10 h-10 bg-[#A7C3AD] text-white rounded-full flex items-center justify-center font-semibold shadow-md hover:bg-[#819A91] transition"
+            >
+              {user.username?.charAt(0).toUpperCase()+user.username?.charAt(1).toUpperCase() || 'U'}
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-[#D4DBC1] rounded-lg shadow-lg z-50">
+                <button
+                  onClick={() => navigate('/my-listings')}
+                  className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
+                >
+                  My Listings
+                </button>
+                <button
+                  onClick={() => navigate('/post-item')}
+                  className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
+                >
+                  Add New Item
+                </button>
+                <button
+                  onClick={() => setShowCatModal(true)}
+                  className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
+                >
+                  Create Category
+                </button>
+                <button
+                  onClick={() => {
+                    logout();
+                    navigate('/');
+                  }}
+                  className="block w-full text-left px-4 py-2 text-[#d9534f] hover:bg-[#f8d7da]"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -104,18 +143,6 @@ function Home() {
                 <option key={cat.id} value={cat.id}>{cat.name}</option>
               ))}
             </select>
-            <button
-              onClick={() => setShowCatModal(true)}
-              className="ml-3 px-4 py-2 rounded-lg border border-[#A7C3AD] text-[#4e5d58] font-medium bg-white hover:bg-[#D4DBC1] transition-colors duration-200 shadow-sm"
-            >
-              + Create Category
-            </button>
-            <button
-              onClick={() => navigate('/post-item')}
-              className="ml-3 px-4 py-2 rounded-lg border border-[#819A91] text-[#4e5d58] font-medium bg-white hover:bg-[#D4DBC1] transition-colors duration-200 shadow-sm"
-            >
-              + Add New Item
-            </button>
           </div>
 
           {!user && (
