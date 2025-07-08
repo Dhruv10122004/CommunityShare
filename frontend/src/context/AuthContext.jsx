@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token'); // Remove token
+    delete axios.defaults.headers.common['Authorization']; // But after logout, if you don’t remove it manually, Axios will continue sending that stale token — even though your app has “logged out.”
   };
 
   // Optionally, provide the token for convenience
