@@ -101,6 +101,12 @@ function Home() {
                   My Listings
                 </button>
                 <button
+                  onClick={() => navigate('/my-bookings')}
+                  className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
+                >
+                  My Bookings
+                </button>
+                <button
                   onClick={() => navigate('/post-item')}
                   className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
                 >

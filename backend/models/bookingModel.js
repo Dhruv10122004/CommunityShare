@@ -31,5 +31,5 @@ exports.getUserBookings = async (userId) => {
         order by b.created_at desc`,
         [userId]
     );
-    return res.rows; // Return all bookings for the user
+    return res.rows; // Return all bookings for the user in the form
 };

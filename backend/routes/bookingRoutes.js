@@ -4,11 +4,11 @@ const { createBooking, updateBooking, getMyBookings } = require('../controllers/
 const { protect } = require('../middleware/authMiddleware');
 
 router.post('/', protect, createBooking);
-router.put('/:id', protect, updateBooking);
-router.get('/my', protect, getMyBookings);
+router.get('/my-bookings', protect, getMyBookings);
 router.get('/ping', (req, res) => {
   res.send('pong from bookings');
 });
+router.put('/:id', protect, updateBooking);
 // This route is for testing purposes, it can be removed later
 
 module.exports = router;
