@@ -70,3 +70,24 @@ exports.getMyListings = async (req, res) => {
     res.status(500).json({ message: 'Server error while fetching user listings' });
   }
 };
+
+exports.updateItem = async (req, res) => {
+    try {
+        const itemId = req.params.id;
+        const userId = req.user.id;
+        const existing = await itemModel.getItemByid(itemId);
+
+        if(!existing) {
+            return res.status(404).json({ message: 'Item not found' });
+        }
+
+        if(existing.owner_id !== userId) {
+            return res.status(403).json({ message: 'You are not authorized to update this item.' });
+        }
+        const updatedItem = itemModel.updateItem(itemId, req.body);
+        res.json(updatedItem);
+    } catch (err) {
+        console.error('Error updating item:', err);
+        res.status(500).json({ message: 'Server error while updating item' });
+    }
+}

@@ -55,3 +55,23 @@ exports.getItemByid = async (itemId) => {
 exports.getItemByOwnerIdListed = async (ownerId) => {
     return await pool.query('select * from items where owner_id = $1', [ownerId]);
 };
+
+exports.updateItem = async (id, data) => {
+  const { title, description, location, price_per_day, condition, availability_status } = data;
+
+  const result = await db.query(
+    `UPDATE items SET
+      title = $1,
+      description = $2,
+      location = $3,
+      price_per_day = $4,
+      condition = $5,
+      availability_status = $6,
+      updated_at = NOW()
+     WHERE id = $7
+     RETURNING *`,
+    [title, description, location, price_per_day, condition, availability_status, id]
+  );
+
+  return res.rows[0];
+};
