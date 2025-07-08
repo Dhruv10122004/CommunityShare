@@ -1,5 +1,8 @@
 import { useNavigate } from 'react-router-dom'; // At the top
+import { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios'; 
 
+const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate(); // 👈 required for redirection
@@ -66,3 +69,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);
