@@ -72,22 +72,28 @@ exports.getMyListings = async (req, res) => {
 };
 
 exports.updateItem = async (req, res) => {
-    try {
-        const itemId = req.params.id;
-        const userId = req.user.id;
-        const existing = await itemModel.getItemByid(itemId);
+  try {
+    const itemId = req.params.id;
+    const userId = req.user.id;
+    const existing = await itemModel.getItemByid(itemId);
+    console.log('Item being handled:', itemId);
+    console.log('User making request:', req.user.id);
+    console.log('Item owner:', existing.rows[0].owner_id);
 
-        if(!existing) {
-            return res.status(404).json({ message: 'Item not found' });
-        }
-
-        if(existing.owner_id !== userId) {
-            return res.status(403).json({ message: 'You are not authorized to update this item.' });
-        }
-        const updatedItem = itemModel.updateItem(itemId, req.body);
-        res.json(updatedItem);
-    } catch (err) {
-        console.error('Error updating item:', err);
-        res.status(500).json({ message: 'Server error while updating item' });
+    if (!existing) {
+      return res.status(404).json({ message: 'Item not found' });
     }
-}
+
+    // Ensure both IDs are compared as strings
+    if (String(existing.rows[0].owner_id) !== String(userId)) {
+      console.log('Unauthorized update attempt by user', userId, 'for item owned by', existing.owner_id);
+      return res.status(403).json({ message: 'You are not authorized to update this item.' });
+    }
+
+    const updatedItem = await itemModel.updateItem(itemId, req.body);
+    res.json(updatedItem);
+  } catch (err) {
+    console.error('Error updating item:', err);
+    res.status(500).json({ message: 'Server error while updating item' });
+  }
+};

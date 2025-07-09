@@ -59,7 +59,7 @@ exports.getItemByOwnerIdListed = async (ownerId) => {
 exports.updateItem = async (id, data) => {
   const { title, description, location, price_per_day, condition, availability_status } = data;
 
-  const result = await db.query(
+  const result = await pool.query(
     `UPDATE items SET
       title = $1,
       description = $2,
@@ -73,5 +73,5 @@ exports.updateItem = async (id, data) => {
     [title, description, location, price_per_day, condition, availability_status, id]
   );
 
-  return res.rows[0];
+  return result.rows[0];
 };

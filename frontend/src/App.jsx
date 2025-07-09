@@ -8,6 +8,7 @@ import ItemDetails from './pages/ItemDetails';
 import PostItem from './pages/PostItem'
 import MyListings from './pages/MyListings';
 import Bookings from './pages/Bookings';
+import EditItem from './pages/EditItem';
 import axios from 'axios';
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
@@ -21,6 +22,7 @@ function App() {
       <Route path="/post-item" element={<PostItem />} />
       <Route path="/my-listings" element={<MyListings />} />
       <Route path="/my-bookings" element={<Bookings />} />
+      <Route path="/items/:id/edit" element={<EditItem />} />
       <Route path="/messages/:userId" element={<Chat />} />
       <Route path="/items/:id" element={<ItemDetails />} />
     </Routes>

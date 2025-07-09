@@ -34,7 +34,7 @@ function MyListings() {
             {items.map(item => (
               <div
                 key={item.id}
-                className="border border-[#D4DBC1] rounded-xl p-5 bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px]"
+                className="border border-[#D4DBC1] rounded-xl p-5 bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px] flex flex-col"
               >
                 <img
                   src={item.image_url || '/placeholder.png'}
@@ -48,18 +48,31 @@ function MyListings() {
                 <p className="text-[#819A91] font-semibold text-sm mb-2">
                   {item.is_free ? 'Free' : `₹${item.price_per_day} / day`}
                 </p>
-                <Link
-                  to={`/items/${item.id}`}
-                  className="inline-block text-sm text-[#819A91] hover:underline mt-2"
-                >
-                  View Item
-                </Link>
+
+                <div className="mt-auto flex justify-between items-center pt-4">
+                  <Link
+                    to={`/items/${item.id}`}
+                    className="px-4 py-1 text-sm bg-[#819A91] text-white rounded hover:bg-[#6d857f] transition"
+                  >
+                    View Item
+                  </Link>
+
+                  <Link
+                    to={`/items/${item.id}/edit`}
+                    className="px-4 py-1 text-sm bg-[#A7C3AD] text-white rounded hover:bg-[#90b69d] transition"
+                  >
+                    Edit
+                  </Link>
+                </div>
               </div>
+
+
+              // </div>
             ))}
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 }
 
