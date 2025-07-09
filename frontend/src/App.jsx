@@ -9,6 +9,7 @@ import PostItem from './pages/PostItem'
 import MyListings from './pages/MyListings';
 import Bookings from './pages/Bookings';
 import EditItem from './pages/EditItem';
+import Profile from './pages/Profile';
 import axios from 'axios';
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
@@ -25,6 +26,7 @@ function App() {
       <Route path="/items/:id/edit" element={<EditItem />} />
       <Route path="/messages/:userId" element={<Chat />} />
       <Route path="/items/:id" element={<ItemDetails />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   )
 };

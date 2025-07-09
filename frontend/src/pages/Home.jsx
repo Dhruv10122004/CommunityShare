@@ -90,10 +90,16 @@ function Home() {
             <button
               className="w-10 h-10 bg-[#A7C3AD] text-white rounded-full flex items-center justify-center font-semibold shadow-md hover:bg-[#819A91] transition"
             >
-              {user.username?.charAt(0).toUpperCase()+user.username?.charAt(1).toUpperCase() || 'U'}
+              {user.username?.charAt(0).toUpperCase() + user.username?.charAt(1).toUpperCase() || 'U'}
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white border border-[#D4DBC1] rounded-lg shadow-lg z-50">
+                <button
+                  onClick={() => navigate('/profile')}
+                  className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
+                >
+                  Profile
+                </button>
                 <button
                   onClick={() => navigate('/my-listings')}
                   className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
