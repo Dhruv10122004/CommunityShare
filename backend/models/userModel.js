@@ -41,3 +41,8 @@ exports.deleteUser = async (userId) => {
     );
     return res.rows[0]; // Return the deleted user
 };
+
+exports.getUserById = async (id) => {
+  const res = await pool.query('SELECT id, name, email FROM users WHERE id = $1', [id]);
+  return res.rows[0];
+}
