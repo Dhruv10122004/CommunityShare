@@ -5,14 +5,32 @@ exports.createBooking = async (booking) => {
         item_id, borrower_id, owner_id, start_date, end_date, total_amount, notes
     } = booking;
 
-    const res = await pool.query(
-        `INSERT INTO bookings
-        (item_id, borrower_id, owner_id, start_date, end_date, total_amount, notes)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-        RETURNING *`,
-        [item_id, borrower_id, owner_id, start_date, end_date, total_amount, notes]
-    );
-    return res.rows[0]; // Return the created booking
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        const res = await client.query(
+            `INSERT INTO bookings
+            (item_id, borrower_id, owner_id, start_date, end_date, total_amount, notes)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING *`,
+            [item_id, borrower_id, owner_id, start_date, end_date, total_amount, notes]
+        );
+
+        await client.query(
+            `UPDATE items SET availability_status = 'booked', updated_at = CURRENT_TIMESTAMP
+             WHERE id = $1`,
+            [item_id]
+        );
+
+        await client.query('COMMIT');
+        return res.rows[0];
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
 };
 
 exports.updateBookingStatus = async (id, status) => {
@@ -25,9 +43,9 @@ exports.updateBookingStatus = async (id, status) => {
 
 exports.getUserBookings = async (userId) => {
     const res = await pool.query(
-        `select b.*, i.title, i.image_url, from bookings b
+        `select b.*, i.title, i.image_url from bookings b
         join items i on b.item_id = i.id
-        where b.borrower_id = $1 or b.owner_id = $1
+        where b.borrower_id = $1
         order by b.created_at desc`,
         [userId]
     );

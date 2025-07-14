@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from "../api";
 
 function Messages() {
   const { user } = useAuth();
@@ -10,7 +11,7 @@ function Messages() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await axios.get('/api/messages');
+        const res = await api.get('/api/messages');
         setThreads(res.data);
       } catch (err) {
         console.log('Failed to load messages', err);

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import api from "../api";
 
 function EditItem() {
 
@@ -11,7 +12,7 @@ function EditItem() {
     const { token } = useAuth();
 
     useEffect(() => {
-        axios.get(`/api/items/${id}`).then(res => setFormData(res.data));
+        api.get(`/api/items/${id}`).then(res => setFormData(res.data));
     }, [id]);
 
     const handleChange = (e) => {
@@ -24,7 +25,7 @@ function EditItem() {
 
     const handleSubmit = async (e)=> {
         e.preventDefault();
-        await axios.put(`/api/items/${id}`, formData, {
+        await api.put(`/api/items/${id}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

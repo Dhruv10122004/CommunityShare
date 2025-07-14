@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import api from "../api";
 
 function Chat() {
   const { user } = useAuth();
@@ -13,7 +14,7 @@ function Chat() {
   useEffect(() => {
     const fetchChat = async () => {
       try {
-        const res = await axios.get(`/api/messages/${userId}`);
+        const res = await api.get(`/api/messages/${userId}`);
         setMessages(res.data);
       } catch (err) {
         console.log('Error loading chat', err);
@@ -26,7 +27,7 @@ function Chat() {
     e.preventDefault();
     if (!newMessage.trim()) return;
     try {
-      const res = await axios.post('/api/messages', {
+      const res = await api.post('/api/messages', {
         receiver_id: userId,
         message: newMessage
       });

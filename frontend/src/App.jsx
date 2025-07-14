@@ -10,8 +10,8 @@ import MyListings from './pages/MyListings';
 import Bookings from './pages/Bookings';
 import EditItem from './pages/EditItem';
 import Profile from './pages/Profile';
-import axios from 'axios';
-axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
+// import axios from 'axios';
+// axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
 function App() {
   return (

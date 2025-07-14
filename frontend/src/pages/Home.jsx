@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from "../api";
 
 function Home() {
   const [categories, setCategories] = useState([]);
@@ -18,7 +19,7 @@ function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get('/api/categories');
+        const res = await api.get('/api/categories');
         setCategories(res.data);
       } catch (err) {
         console.error('Error fetching categories:', err);
@@ -33,7 +34,7 @@ function Home() {
         const url = selectedCategory
           ? `/api/items?categoryId=${selectedCategory}`
           : '/api/items';
-        const res = await axios.get(url);
+        const res = await api.get(url);
         setItems(res.data);
       } catch (err) {
         console.error('Error fetching items:', err);
@@ -50,7 +51,7 @@ function Home() {
       return;
     }
     try {
-      const res = await axios.post('/api/categories', newCat, {
+      const res = await api.post('/api/categories', newCat, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCategories([...categories, res.data]);
@@ -240,10 +241,12 @@ function Home() {
                 </span>
                 <span className="text-sm text-[#819A91] ml-1">per day</span>
               </div>
-              {item.availability_status === 'available' && (
-                <p className="text-green-700 font-medium mt-2 text-sm">
+              {item.availability_status === 'available' ? (
+                <p className="text-green-700 font-medium mt-2">
                   ✓ Available to borrow
                 </p>
+              ) : (
+                <p className="text-red-500 font-bold">Borrowed</p>
               )}
               <Link
                 to={`/items/${item.id}`}

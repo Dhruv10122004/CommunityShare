@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from "../api";
 
 function PostItem() {
     const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ function PostItem() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await axios.get('/api/categories');
+                const res = await api.get('/api/categories');
                 setCategories(res.data);
             } catch (err) {
                 console.error('Failed to load categories', err);
@@ -42,7 +43,7 @@ function PostItem() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/items', formData, {
+            await api.post('/api/items', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

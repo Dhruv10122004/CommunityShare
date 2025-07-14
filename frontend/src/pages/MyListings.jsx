@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from "../api";
 
 function MyListings() {
   const [items, setItems] = useState([]);
@@ -11,7 +12,7 @@ function MyListings() {
     const fetchMyItems = async () => {
       if (!token) return;
       try {
-        const res = await axios.get('/api/items/my-listings');
+        const res = await api.get('/api/items/my-listings');
         setItems(res.data);
       } catch (err) {
         console.error('Error fetching your items', err.response?.data || err.message);

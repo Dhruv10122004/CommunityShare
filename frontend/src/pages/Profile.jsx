@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import axios from "axios"
 import { useAuth } from "../context/AuthContext"
 import { User, Mail, Calendar, BookOpen, Trash2 } from "lucide-react"
+import api from "../api";
 
 function Profile() {
   const { token, logout } = useAuth()
@@ -12,7 +12,7 @@ function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("/api/auth/profile")
+        const res = await api.get("/api/auth/profile")
         setProfile(res.data)
       } catch (err) {
         console.error("Error fetching profile info", err.response?.data || err.message)
@@ -24,7 +24,7 @@ function Profile() {
   const deleteAccount = async () => {
     if (!window.confirm("Are you sure you want to delete your account? This cannot be undone.")) return
     try {
-      await axios.delete("/api/me")
+      await api.delete("/api/me")
       logout()
       window.location.href = "/register"
     } catch (err) {
@@ -130,4 +130,4 @@ function Profile() {
   )
 }
 
-export default Profile
+export default Profile;

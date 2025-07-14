@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 exports.protect = (req, res, next) => {
   console.log("🔐 authenticate middleware called");
-
+  console.log("🔑 Using secret:", process.env.JWT_SECRET);
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.split(' ')[1];

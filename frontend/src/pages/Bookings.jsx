@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import api from "../api";
 
 function Bookings() {
   const [bookings, setBookings] = useState([]);
@@ -7,7 +8,7 @@ function Bookings() {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await axios.get('/api/bookings/my-bookings');
+        const res = await api.get("/api/bookings/my-bookings");
         setBookings(res.data);
       } catch (err) {
         console.error('Error fetching bookings');
