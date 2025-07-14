@@ -10,24 +10,28 @@ import MyListings from './pages/MyListings';
 import Bookings from './pages/Bookings';
 import EditItem from './pages/EditItem';
 import Profile from './pages/Profile';
+import Navbar from './components/Navbar';
 // import axios from 'axios';
 // axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/messages" element={<Messages />} />
-      <Route path="/post-item" element={<PostItem />} />
-      <Route path="/my-listings" element={<MyListings />} />
-      <Route path="/my-bookings" element={<Bookings />} />
-      <Route path="/items/:id/edit" element={<EditItem />} />
-      <Route path="/messages/:userId" element={<Chat />} />
-      <Route path="/items/:id" element={<ItemDetails />} />
-      <Route path="/profile" element={<Profile />} />
-    </Routes>
+    <div className='App'>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/post-item" element={<PostItem />} />
+        <Route path="/my-listings" element={<MyListings />} />
+        <Route path="/my-bookings" element={<Bookings />} />
+        <Route path="/items/:id/edit" element={<EditItem />} />
+        <Route path="/messages/:userId" element={<Chat />} />
+        <Route path="/items/:id" element={<ItemDetails />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </div>
   )
 };
 
