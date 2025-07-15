@@ -72,12 +72,6 @@ function Navbar() {
                   Add New Item
                 </button>
                 <button
-                  onClick={() => navigate('/create-category')}
-                  className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
-                >
-                  Create Category
-                </button>
-                <button
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 text-[#d9534f] hover:bg-[#f8d7da]"
                 >

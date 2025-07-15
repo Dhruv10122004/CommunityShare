@@ -2,7 +2,16 @@ const itemModel = require('../models/itemModel');
 
 exports.createItem = async (req, res) => {
     try {
-        const item = await itemModel.createItem({...req.body, owner_id: req.user.id}); // after spread operator we can add new properties or update the existing ones.
+        // Get image URL if file is uploaded
+        const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+
+        // Pass all form fields and add owner_id + image_url
+        const item = await itemModel.createItem({
+            ...req.body,
+            owner_id: req.user.id,
+            image_url, // Add the image path to DB
+        });
+
         res.status(201).json(item);
     } catch (error) {
         res.status(500).json({ message: error.message });
