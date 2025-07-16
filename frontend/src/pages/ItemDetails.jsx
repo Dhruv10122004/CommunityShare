@@ -82,12 +82,12 @@ function ItemDetails() {
     )
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-200 to-slate-200 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Back Button */}
         <div className="mb-6">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
             className="inline-flex items-center text-slate-600 hover:text-slate-800 font-medium transition-colors duration-200"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

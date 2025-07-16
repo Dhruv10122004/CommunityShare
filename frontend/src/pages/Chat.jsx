@@ -40,20 +40,19 @@ function Chat() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto min-h-screen bg-[#F3F4E8] flex flex-col">
-      <h2 className="text-2xl font-bold text-[#4e5d58] mb-6">Chat</h2>
+    <div className="p-6 max-w-3xl mx-auto min-h-screen bg-slate-50 flex flex-col">
+      <h2 className="text-2xl font-bold text-slate-800 mb-6">Chat</h2>
       <div className="flex-1 overflow-y-auto space-y-3 mb-4">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`max-w-md px-4 py-2 rounded-lg text-[#4e5d58] shadow-sm ${
-              msg.sender_id === user.id
-                ? 'bg-[#A7C3AD] self-end'
-                : 'bg-white border border-[#D4DBC1] self-start'
-            }`}
+            className={`max-w-md px-4 py-2 rounded-lg text-slate-800 shadow-sm ${msg.sender_id === user.id
+                ? 'bg-green-200 self-end'
+                : 'bg-white border border-slate-300 self-start'
+              }`}
           >
             <p>{msg.message}</p>
-            <small className="text-[#667c75] text-xs block mt-1">
+            <small className="text-slate-500 text-xs block mt-1">
               {new Date(msg.created_at).toLocaleTimeString()}
             </small>
           </div>
@@ -65,17 +64,18 @@ function Chat() {
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
-          className="flex-1 border border-[#A7C3AD] p-3 rounded-lg shadow-sm focus:ring-2 focus:ring-[#819A91]"
+          className="flex-1 border border-blue-200 p-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
           placeholder="Type a message..."
         />
         <button
           type="submit"
-          className="bg-[#819A91] text-white px-6 py-2 rounded-lg hover:bg-[#6d857f] transition-colors duration-200 shadow"
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow"
         >
           Send
         </button>
       </form>
     </div>
+
   );
 }
 

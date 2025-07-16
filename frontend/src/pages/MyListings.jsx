@@ -33,40 +33,46 @@ function MyListings() {
       console.error('Failed to delete item', err.response?.data || err.message);
     }
   };
+  console.log("Base URL:", import.meta.env.VITE_API_BASE_URL);
 
+  items.forEach((item, index) => {
+    console.log(`Item ${index + 1}:`, item.title);
+    console.log(`Image URL:`, item.image_url);
+    console.log(`Full URL: ${import.meta.env.VITE_API_BASE_URL}${item.image_url}`);
+  });
   return (
-    <div className="min-h-screen bg-[#F3F4E8] py-10 px-4">
+    <div className="min-h-screen bg-slate-50 py-10 px-4">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-[#4e5d58] mb-8 text-center">
+        <h1 className="text-3xl font-bold text-slate-700 mb-8 text-center">
           My Listed Items
         </h1>
 
         {items.length === 0 ? (
-          <p className="text-center text-[#819A91] text-lg">No items listed yet.</p>
+          <p className="text-center text-green-700 text-lg">No items listed yet.</p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {items.map((item, idx) => (
               <div
                 key={item.id}
-                className="border border-[#D4DBC1] rounded-xl p-5 bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:translate-y-[-2px] flex flex-col relative"
+                className="border border-slate-200 rounded-xl p-5 bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col relative"
               >
-                <img
-                  src={item.image_url || '/placeholder.png'}
-                  alt={item.title}
-                  className="w-full h-40 object-cover rounded-lg mb-3"
-                />
-                <h2 className="text-lg font-bold text-[#4e5d58] mb-1">{item.title}</h2>
-                <p className="text-sm text-[#667c75] mb-2">
+                <img src={
+                item.image_url
+                  ? `${import.meta.env.VITE_API_BASE_URL}${item.image_url}`
+                  : "/placeholder.png"
+              } alt={item.title} className="w-full h-full object-cover" />
+                <h2 className="text-lg font-bold text-slate-700 mb-1">{item.title}</h2>
+                <p className="text-sm text-slate-600 mb-2">
                   {item.description?.slice(0, 80)}...
                 </p>
-                <p className="text-[#819A91] font-semibold text-sm mb-2">
+                <p className="text-green-700 font-semibold text-sm mb-2">
                   {item.is_free ? 'Free' : `₹${item.price_per_day} / day`}
                 </p>
 
                 <div className="mt-auto flex justify-between items-center pt-4">
                   <Link
                     to={`/items/${item.id}`}
-                    className="px-4 py-1 text-sm bg-[#819A91] text-white rounded hover:bg-[#6d857f] transition"
+                    className="px-4 py-1 text-sm bg-green-700 text-white rounded hover:bg-green-800 transition"
                   >
                     View Item
                   </Link>
@@ -76,22 +82,22 @@ function MyListings() {
                       onClick={() =>
                         setOpenDropdown(openDropdown === idx ? null : idx)
                       }
-                      className="p-2 rounded-full hover:bg-[#F3F4E8] transition"
+                      className="p-2 rounded-full hover:bg-slate-50 transition"
                     >
-                      <MoreVertical className="h-5 w-5 text-[#4e5d58]" />
+                      <MoreVertical className="h-5 w-5 text-slate-700" />
                     </button>
 
                     {openDropdown === idx && (
-                      <div className="absolute right-0 mt-2 w-32 bg-white border border-[#D4DBC1] rounded-md shadow-md z-10">
+                      <div className="absolute right-0 mt-2 w-32 bg-white border border-slate-200 rounded-md shadow-md z-10">
                         <Link
                           to={`/items/${item.id}/edit`}
-                          className="block px-4 py-2 text-sm text-[#4e5d58] hover:bg-[#F3F4E8]"
+                          className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
                         >
                           Edit
                         </Link>
                         <button
                           onClick={() => handleDelete(item.id)}
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-[#F3F4E8]"
+                          className="w-full text-left px-4 py-2 text-sm text-red-800 hover:bg-red-100"
                         >
                           Delete
                         </button>

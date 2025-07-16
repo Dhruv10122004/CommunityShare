@@ -66,17 +66,10 @@ function Home() {
       }
     }
   }
-  console.log("Base URL:", import.meta.env.VITE_API_BASE_URL);
-
-  items.forEach((item, index) => {
-    console.log(`Item ${index + 1}:`, item.title);
-    console.log(`Image URL:`, item.image_url);
-    console.log(`Full URL: ${import.meta.env.VITE_API_BASE_URL}${item.image_url}`);
-  });
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-200 to-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Simple Header */}
         <div className="flex justify-between items-center mb-6">
@@ -219,7 +212,7 @@ function Home() {
           {items.map((item) => (
             <div
               key={item.id}
-              className="group bg-white border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden hover:-translate-y-1"
+              className="group bg-white border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden hover:-translate-y-1 flex flex-col h-full"
             >
               <div className="relative overflow-hidden">
                 <img
@@ -244,7 +237,7 @@ function Home() {
                 </div>
               </div>
 
-              <div className="p-6">
+              <div className="p-6 flex flex-col flex-1">
                 <h3 className="text-xl font-bold text-slate-800 mb-2 line-clamp-1">{item.title}</h3>
 
                 <p className="text-slate-600 text-sm mb-4 line-clamp-2 leading-relaxed">
@@ -260,7 +253,7 @@ function Home() {
 
                 <Link
                   to={`/items/${item.id}`}
-                  className="block w-full text-center px-4 py-3 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-sm"
+                  className="block w-full text-center px-4 py-3 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-sm mt-auto"
                 >
                   View Details
                 </Link>

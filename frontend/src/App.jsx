@@ -11,6 +11,7 @@ import Bookings from './pages/Bookings';
 import EditItem from './pages/EditItem';
 import Profile from './pages/Profile';
 import Navbar from './components/Navbar';
+import Landing from './pages/Landing';
 // import axios from 'axios';
 // axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
@@ -19,7 +20,7 @@ function App() {
     <div className='App'>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/messages" element={<Messages />} />
@@ -30,6 +31,7 @@ function App() {
         <Route path="/messages/:userId" element={<Chat />} />
         <Route path="/items/:id" element={<ItemDetails />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/" element={<Landing />} />
       </Routes>
     </div>
   )

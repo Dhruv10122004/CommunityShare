@@ -1,14 +1,16 @@
-// src/components/Navbar.jsx
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useEffect, useRef, useState } from 'react';
 
 function Navbar() {
-  const { token, logout, user } = useAuth(); // Make sure user is exposed in context
+  const { token, logout, user } = useAuth();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timeoutRef = useRef(null);
+
+  // ✅ Hide navbar on landing page ("/")
+  if (location.pathname === "/") return null;
 
   const handleMouseEnter = () => {
     clearTimeout(timeoutRef.current);
@@ -27,10 +29,10 @@ function Navbar() {
   };
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+    <header className="bg-gradient-to-br from-blue-300 to-slate-200 shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className="text-2xl font-bold text-[#4e5d58]">
+        <Link to="/home" className="text-2xl font-bold text-slate-700">
           CommunityShare
         </Link>
 
@@ -40,40 +42,40 @@ function Navbar() {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <button className="w-10 h-10 bg-[#A7C3AD] text-white rounded-full flex items-center justify-center font-semibold shadow-md hover:bg-[#819A91] transition">
+            <button className="w-10 h-10 bg-slate-700 text-white rounded-full flex items-center justify-center font-semibold shadow-md hover:bg-green-700 transition">
               {(user.username?.[0]?.toUpperCase() || 'U') +
                 (user.username?.[1]?.toUpperCase() || '')}
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-[#D4DBC1] rounded-lg shadow-lg z-50">
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg z-50">
                 <button
                   onClick={() => navigate('/profile')}
-                  className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
+                  className="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50"
                 >
                   Profile
                 </button>
                 <button
                   onClick={() => navigate('/my-listings')}
-                  className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
+                  className="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50"
                 >
                   My Listings
                 </button>
                 <button
                   onClick={() => navigate('/my-bookings')}
-                  className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
+                  className="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50"
                 >
                   My Bookings
                 </button>
                 <button
                   onClick={() => navigate('/post-item')}
-                  className="block w-full text-left px-4 py-2 text-[#4e5d58] hover:bg-[#F3F4E8]"
+                  className="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50"
                 >
                   Add New Item
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 text-[#d9534f] hover:bg-[#f8d7da]"
+                  className="block w-full text-left px-4 py-2 text-red-800 hover:bg-red-100"
                 >
                   Logout
                 </button>

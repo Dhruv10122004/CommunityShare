@@ -73,6 +73,7 @@ exports.getMyListings = async (req, res) => {
     const userId = req.user.id; // From JWT
     const items = await itemModel.getItemByOwnerIdListed(userId);
     // console.log("🟡 getItemByOwnerIdListed returned:", items); // <-- debug this
+    // console.log(items.rows[0].image_url);
     res.json(items.rows);
   } catch (err) {
     console.error(err);
