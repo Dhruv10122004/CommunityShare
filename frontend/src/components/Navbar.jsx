@@ -68,6 +68,12 @@ function Navbar() {
                   My Bookings
                 </button>
                 <button
+                  onClick={() => navigate('/messages')}
+                  className="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50"
+                >
+                  Messages Inbox
+                </button>
+                <button
                   onClick={() => navigate('/post-item')}
                   className="block w-full text-left px-4 py-2 text-slate-700 hover:bg-slate-50"
                 >

@@ -17,6 +17,7 @@ exports.getConversation = async (req, res) => {
         // Use req.body for data sent in the request body (like POST/PUT).
         // Use req.query for query string parameters (like ?search=abc).
         const messages = await messageModel.getConversation(req.user.id, userId);
+        res.json(messages);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

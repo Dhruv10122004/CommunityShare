@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import api from "../api";
 
@@ -11,11 +10,17 @@ function Chat() {
   const [newMessage, setNewMessage] = useState('');
   const chatEndRef = useRef(null);
 
+  // Scroll to bottom whenever messages change
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   useEffect(() => {
     const fetchChat = async () => {
       try {
         const res = await api.get(`/api/messages/${userId}`);
         setMessages(res.data);
+        scrollToBottom(); // scroll after messages are loaded
       } catch (err) {
         console.log('Error loading chat', err);
       }
@@ -33,7 +38,7 @@ function Chat() {
       });
       setMessages(prev => [...prev, res.data]);
       setNewMessage('');
-      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      scrollToBottom(); // scroll after new message
     } catch (err) {
       console.error('Failed to send message', err);
     }
@@ -46,10 +51,11 @@ function Chat() {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`max-w-md px-4 py-2 rounded-lg text-slate-800 shadow-sm ${msg.sender_id === user.id
+            className={`max-w-md px-4 py-2 rounded-lg text-slate-800 shadow-sm ${
+              msg.sender_id === user.id
                 ? 'bg-green-200 self-end'
                 : 'bg-white border border-slate-300 self-start'
-              }`}
+            }`}
           >
             <p>{msg.message}</p>
             <small className="text-slate-500 text-xs block mt-1">
@@ -75,7 +81,6 @@ function Chat() {
         </button>
       </form>
     </div>
-
   );
 }
 
