@@ -1,6 +1,19 @@
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Landing() {
+
+  const { token } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(token) {
+      navigate('/home');
+    }
+  }, [token, navigate]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-200 to-slate-200 flex flex-col items-center justify-center text-center px-6">
       {/* Logo + Tagline */}

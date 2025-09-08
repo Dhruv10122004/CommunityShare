@@ -13,7 +13,13 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+// Configure CORS to only allow requests from your live frontend
+const corsOptions = {
+  origin: process.env.CLIENT_URL, // This will be your Vercel URL
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 app.use('/api/auth', authRoutes);

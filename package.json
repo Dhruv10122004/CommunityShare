@@ -2,7 +2,9 @@
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.1.15",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.2",
     "lucide-react": "^0.525.0",
+    "pg": "^8.16.3",
     "react-datepicker": "^8.4.0"
   }
 }
