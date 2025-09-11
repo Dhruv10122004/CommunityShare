@@ -1,11 +1,12 @@
-import { useNavigate } from 'react-router-dom'; // At the top
+import { useNavigate } from 'react-router-dom';
 import { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios'; 
+import api from '../api'; // 👈 **CRITICAL CHANGE #1: Import your custom 'api' instance**
 
 const AuthContext = createContext();
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate(); // 👈 required for redirection
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -16,7 +17,8 @@ export const AuthProvider = ({ children }) => {
 
   // ⬇️ Axios interceptor to auto-logout on token expiry/invalid
   useEffect(() => {
-    const interceptor = axios.interceptors.response.use(
+    // 👇 **CRITICAL CHANGE #2: Attach the interceptor to your 'api' instance**
+    const interceptor = api.interceptors.response.use(
       response => response,
       error => {
         if (error.response?.status === 401) {
@@ -27,11 +29,13 @@ export const AuthProvider = ({ children }) => {
       }
     );
 
-    return () => axios.interceptors.response.eject(interceptor);
-  }, []);
+    // Clean up the interceptor when the component unmounts
+    return () => api.interceptors.response.eject(interceptor);
+  }, [navigate]); // Added navigate as a dependency
 
   const login = async (email, password) => {
-    const res = await axios.post('/api/auth/login', { email, password });
+    // 👇 **CRITICAL CHANGE #3: Use 'api' for all requests**
+    const res = await api.post('/auth/login', { email, password });
     if (res.data.token && res.data.user) {
       setUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
@@ -40,7 +44,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
-    const res = await axios.post('/api/auth/register', userData);
+    // 👇 **CRITICAL CHANGE #4: Use 'api' for all requests**
+    const res = await api.post('/auth/register', userData);
     if (res.data.token && res.data.user) {
       setUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
@@ -52,7 +57,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
+    // Note: The Authorization header is managed by the interceptor in api.js now,
+    // so deleting it from a global default is no longer necessary.
   };
 
   const token = localStorage.getItem('token');
