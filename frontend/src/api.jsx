@@ -1,9 +1,9 @@
 // src/api.js
 import axios from "axios";
 
-// Create the axios instance with the baseURL from environment variables
+// Create the axios instance with the CORRECT baseURL that includes /api
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`, // 👈 THE FIX IS HERE
 });
 
 // Interceptor to attach token to every request (this part stays the same)
