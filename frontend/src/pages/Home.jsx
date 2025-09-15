@@ -20,7 +20,7 @@ function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await api.get("/api/categories")
+        const res = await api.get("/categories")
         setCategories(res.data)
       } catch (err) {
         console.error("Error fetching categories:", err)
@@ -32,7 +32,7 @@ function Home() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const url = selectedCategory ? `/api/items?categoryId=${selectedCategory}` : "/api/items"
+        const url = selectedCategory ? `/items?categoryId=${selectedCategory}` : "/items"
         const res = await api.get(url)
         setItems(res.data)
       } catch (err) {
@@ -50,7 +50,7 @@ function Home() {
       return
     }
     try {
-      const res = await api.post("/api/categories", newCat, {
+      const res = await api.post("/categories", newCat, {
         headers: { Authorization: `Bearer ${token}` },
       })
       setCategories([...categories, res.data])

@@ -12,7 +12,7 @@ function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await api.get("/api/auth/profile")
+        const res = await api.get("/auth/profile")
         setProfile(res.data)
       } catch (err) {
         console.error("Error fetching profile info", err.response?.data || err.message)
@@ -24,7 +24,7 @@ function Profile() {
   const deleteAccount = async () => {
     if (!window.confirm("Are you sure you want to delete your account? This cannot be undone.")) return
     try {
-      await api.delete("/api/me")
+      await api.delete("/me")
       logout()
       window.location.href = "/register"
     } catch (err) {

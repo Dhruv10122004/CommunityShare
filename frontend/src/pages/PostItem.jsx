@@ -23,7 +23,7 @@ function PostItem() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await api.get('/api/categories');
+                const res = await api.get('/categories');
                 setCategories(res.data);
             } catch (err) {
                 console.error('Failed to load categories', err);
@@ -57,7 +57,7 @@ function PostItem() {
                 submissionData.append('image', imageFile); // name should match Multer's `.single('image')`
             }
 
-            await axios.post('/api/items', submissionData, {
+            await axios.post('/items', submissionData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',

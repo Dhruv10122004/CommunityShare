@@ -12,7 +12,7 @@ function EditItem() {
   const { token } = useAuth();
 
   useEffect(() => {
-    api.get(`/api/items/${id}`).then(res => setFormData(res.data));
+    api.get(`/items/${id}`).then(res => setFormData(res.data));
   }, [id]);
 
   const handleChange = (e) => {
@@ -25,7 +25,7 @@ function EditItem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await api.put(`/api/items/${id}`, formData, {
+    await api.put(`/items/${id}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`
       }

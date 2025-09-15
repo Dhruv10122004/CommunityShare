@@ -40,7 +40,7 @@ function ItemDetails() {
     }
     const today = new Date()
     try {
-      const res = await api.post("/api/bookings", {
+      const res = await api.post("/bookings", {
         item_id: item.id,
         borrower_id: user.id,
         owner_id: item.owner_id,
@@ -60,7 +60,7 @@ function ItemDetails() {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const res = await api.get(`/api/items/${id}`)
+        const res = await api.get(`/items/${id}`)
         setItem(res.data)
       } catch (err) {
         console.log("Error fetching item details", err)

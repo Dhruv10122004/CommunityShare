@@ -18,7 +18,7 @@ function Chat() {
   useEffect(() => {
     const fetchChat = async () => {
       try {
-        const res = await api.get(`/api/messages/${userId}`);
+        const res = await api.get(`/messages/${userId}`);
         setMessages(res.data);
         scrollToBottom(); // scroll after messages are loaded
       } catch (err) {
@@ -32,7 +32,7 @@ function Chat() {
     e.preventDefault();
     if (!newMessage.trim()) return;
     try {
-      const res = await api.post('/api/messages', {
+      const res = await api.post('/messages', {
         receiver_id: userId,
         message: newMessage
       });

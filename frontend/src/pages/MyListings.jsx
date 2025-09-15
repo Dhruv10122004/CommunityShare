@@ -13,7 +13,7 @@ function MyListings() {
     const fetchMyItems = async () => {
       if (!token) return;
       try {
-        const res = await api.get('/api/items/my-listings');
+        const res = await api.get('/items/my-listings');
         setItems(res.data);
       } catch (err) {
         console.error('Error fetching your items', err.response?.data || err.message);
@@ -27,7 +27,7 @@ function MyListings() {
     if (!confirmDelete) return;
 
     try {
-      await api.delete(`/api/items/${id}`);
+      await api.delete(`/items/${id}`);
       setItems(prevItems => prevItems.filter(item => item.id !== id));
     } catch (err) {
       console.error('Failed to delete item', err.response?.data || err.message);
