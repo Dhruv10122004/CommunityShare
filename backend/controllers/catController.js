@@ -3,7 +3,7 @@ const catModel = require('../models/catModel');
 exports.getCategories = async (req, res) => {
     try {
         const categories = await catModel.getAllCategories();
-        res.json(categories.rows);
+        res.json(categories);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
