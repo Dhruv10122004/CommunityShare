@@ -1,30 +1,28 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+
 const authRoutes = require('./routes/authRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const messageRoutes = require('./routes/messageRoutes');
-const catRoutes = require('./routes/catRoutes'); // New route for categorie
+const catRoutes = require('./routes/catRoutes');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 dotenv.config();
 
 const app = express();
 
-// Configure CORS to only allow requests from your live frontend
-const corsOptions = {
-  origin: process.env.CLIENT_URL, // This will be your Vercel URL
-  credentials: true,
-};
-app.use(cors(corsOptions));
+// Debug: allow all origins first
+app.use(cors());
 
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
+
 app.use('/api/auth', authRoutes);
 app.use('/api/items', itemRoutes);
-app.use('/api/categories', catRoutes); // New route for categorie
+app.use('/api/categories', catRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/messages', messageRoutes);

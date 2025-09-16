@@ -1,12 +1,12 @@
 const catModel = require('../models/catModel');
 
 exports.getCategories = async (req, res) => {
-    try {
-        const categories = await catModel.getAllCategories();
-        res.json(categories);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+  try {
+    const categories = await catModel.getAllCategories();
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 exports.createCategory = async (req, res) => {
@@ -15,10 +15,15 @@ exports.createCategory = async (req, res) => {
     if (existing) {
       return res.status(409).json({ message: 'Category already exists' });
     }
-    const category = await catModel.createCategory(req.body.name, req.body.description, req.body.icon);
+
+    const category = await catModel.createCategory(
+      req.body.name,
+      req.body.description,
+      req.body.icon
+    );
+
     res.status(201).json(category);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
-
