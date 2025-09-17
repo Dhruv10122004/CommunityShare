@@ -12,10 +12,16 @@ import EditItem from './pages/EditItem';
 import Profile from './pages/Profile';
 import Navbar from './components/Navbar';
 import Landing from './pages/Landing';
+import { useEffect } from 'react';
+
 // import axios from 'axios';
 // axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
 
 function App() {
+  useEffect(() => {
+  console.log("VITE_API_BASE_URL =", import.meta.env.VITE_API_BASE_URL);
+}, []);
+
   return (
     <div className='App'>
       <Navbar />

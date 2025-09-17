@@ -4,19 +4,33 @@ const userModel = require('../models/userModel'); // Import the user model
 const pool = require('../config/db');
 
 exports.register = async (req, res) => {
-    try {
-        const userExists = await userModel.findUserByEmail(req.body.email);
-        if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
-        const hashed = await bcrypt.hash(req.body.password, 10); // used to hash the password and make it of length 10
-        const newUser = await userModel.createUser({ ...req.body, password_hash: hashed }); // createUser is a function in userModel.js that creates a new user
-        //use spread operator to copy properties from req.body and add password_hash (can update any properties if needed)
-        res.status(201).json({ token: generateToken(newUser.id), user: newUser });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+  try {
+    console.log("🔹 Incoming registration body:", req.body);
+
+    const userExists = await userModel.findUserByEmail(req.body.email);
+    console.log("🔹 userExists:", userExists);
+
+    if (userExists) {
+      return res.status(400).json({ message: 'User already exists' });
     }
+
+    if (!req.body.password) {
+      console.log("❌ No password provided");
+    }
+
+    const hashed = await bcrypt.hash(req.body.password, 10);
+    console.log("🔹 Password hashed:", hashed);
+
+    const newUser = await userModel.createUser({ ...req.body, password_hash: hashed });
+    console.log("🔹 New user created:", newUser);
+
+    res.status(201).json({ token: generateToken(newUser.id), user: newUser });
+  } catch (err) {
+    console.error("❌ Registration error:", err);  // Important: logs the actual error
+    res.status(500).json({ message: err.message });
+  }
 };
+
 
 exports.login = async (req, res) => {
     try {
