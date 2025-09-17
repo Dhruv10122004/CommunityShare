@@ -8,26 +8,32 @@ exports.register = async (req, res) => {
     console.log("🔹 Incoming registration body:", req.body);
 
     const userExists = await userModel.findUserByEmail(req.body.email);
-    console.log("🔹 userExists:", userExists);
-
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'Email already in use' });
     }
 
-    if (!req.body.password) {
-      console.log("❌ No password provided");
+    // Also check username
+    const usernameCheck = await pool.query(
+      "SELECT id FROM users WHERE username = $1",
+      [req.body.username]
+    );
+    if (usernameCheck.rows.length > 0) {
+      return res.status(400).json({ message: 'Username already taken' });
     }
 
     const hashed = await bcrypt.hash(req.body.password, 10);
-    console.log("🔹 Password hashed:", hashed);
+    const newUser = await userModel.createUser({
+      ...req.body,
+      password_hash: hashed,
+    });
 
-    const newUser = await userModel.createUser({ ...req.body, password_hash: hashed });
-    console.log("🔹 New user created:", newUser);
-
-    res.status(201).json({ token: generateToken(newUser.id), user: newUser });
+    res.status(201).json({
+      token: generateToken(newUser.id),
+      user: newUser,
+    });
   } catch (err) {
-    console.error("❌ Registration error:", err);  // Important: logs the actual error
-    res.status(500).json({ message: err.message });
+    console.error("❌ Registration error:", err);
+    res.status(500).json({ message: 'Server error during registration' });
   }
 };
 
