@@ -59,14 +59,23 @@ function PostItem() {
 
             await api.post('/items', submissionData, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    // Authorization: `Bearer ${token}`,  ---> may over-ride the current token causing authorization errors.
                     'Content-Type': 'multipart/form-data',
                 }
             });
 
             navigate('/');
         } catch (err) {
-            console.error('Item submission failed', err);
+            if (err.response) {
+                // Server responded with an error (like 401, 403, 500, etc.)
+                console.error("Item submission failed:", err.response.data);
+            } else if (err.request) {
+                // Request was made but no response
+                console.error("No response received:", err.request);
+            } else {
+                // Something else went wrong
+                console.error("Error:", err.message);
+            }
         }
     };
 
