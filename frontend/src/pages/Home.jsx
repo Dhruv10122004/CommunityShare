@@ -50,9 +50,10 @@ function Home() {
       return
     }
     try {
-      const res = await api.post("/categories", newCat, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      // const res = await api.post("/categories", newCat, {
+      //   headers: { Authorization: `Bearer ${token}` }, same case as described in EditItem file
+      // })
+      const res = await api.post("/categories", newCat);
       setCategories([...categories, res.data])
       setShowCatModal(false)
       setNewCat({ name: "", description: "" })

@@ -25,11 +25,12 @@ function EditItem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await api.put(`/items/${id}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    // await api.put(`/items/${id}`, formData, {
+    //   headers: {
+    //     Authorization: `Bearer ${token}` do not manually pass this as api.jsx interceptor already adds the token stored in local storage, this may pass empty or stale token causing authorization issues.
+    //   }
+    // });
+    await api.put(`/items/${id}`, formData);
     navigate('/my-listings');
   };
 
