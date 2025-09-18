@@ -57,7 +57,7 @@ function PostItem() {
                 submissionData.append('image', imageFile); // name should match Multer's `.single('image')`
             }
 
-            await axios.post('/items', submissionData, {
+            await api.post('/items', submissionData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
