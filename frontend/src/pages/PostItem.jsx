@@ -54,30 +54,23 @@ function PostItem() {
             });
 
             if (imageFile) {
-                submissionData.append('image', imageFile); // name should match Multer's `.single('image')`
+                submissionData.append('image', imageFile); // must match multer field
             }
 
-            await api.post('/items', submissionData, {
-                headers: {
-                    // Authorization: `Bearer ${token}`,  ---> may over-ride the current token causing authorization errors.
-                    'Content-Type': 'multipart/form-data',
-                }
-            });
+            await api.post('/items', submissionData); // no headers needed, interceptor handles it
 
             navigate('/');
         } catch (err) {
             if (err.response) {
-                // Server responded with an error (like 401, 403, 500, etc.)
                 console.error("Item submission failed:", err.response.data);
             } else if (err.request) {
-                // Request was made but no response
                 console.error("No response received:", err.request);
             } else {
-                // Something else went wrong
                 console.error("Error:", err.message);
             }
         }
     };
+
 
     return (
         <div className="p-4 max-w-3xl mx-auto">
