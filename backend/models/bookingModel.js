@@ -42,11 +42,33 @@ exports.createBooking = async (booking) => {
 };
 
 exports.updateBookingStatus = async (id, status) => {
-    const res = await pool.query(
-        'UPDATE bookings SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
-    [status, id]
-    );
-    return res.rows[0]; // Return the updated booking
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        const res = await client.query(
+            'UPDATE bookings SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
+            [status, id]
+        );
+
+        const booking = res.rows[0];
+
+        if (status === 'completed' || status === 'cancelled' || status === 'rejected') {
+            await client.query(
+                `UPDATE items SET availability_status = 'available', updated_at = NOW()
+                 WHERE id = $1`,
+                [booking.item_id]
+            );
+        }
+
+        await client.query('COMMIT');
+        return booking;
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
 };
 
 exports.getUserBookings = async (userId) => {
