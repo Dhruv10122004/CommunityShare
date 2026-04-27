@@ -2,12 +2,26 @@ const pool = require('../config/db');
 
 exports.createBooking = async (booking) => {
     const {
-        item_id, borrower_id, owner_id, start_date, end_date, total_amount, notes
+        item_id, borrower_id, owner_id, 
+        start_date, end_date, total_amount, notes
     } = booking;
 
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
+
+        const itemUpdate = await client.query( // this way we handle the race condition
+            `UPDATE items 
+             SET availability_status = 'booked', updated_at = CURRENT_TIMESTAMP
+             WHERE id = $1 AND availability_status = 'available'
+             RETURNING *`,
+            [item_id]
+        );
+
+        if (itemUpdate.rows.length === 0) {
+            await client.query('ROLLBACK');
+            throw new Error('Item is no longer available');
+        }
 
         const res = await client.query(
             `INSERT INTO bookings
@@ -17,17 +31,11 @@ exports.createBooking = async (booking) => {
             [item_id, borrower_id, owner_id, start_date, end_date, total_amount, notes]
         );
 
-        await client.query(
-            `UPDATE items SET availability_status = 'booked', updated_at = CURRENT_TIMESTAMP
-             WHERE id = $1`,
-            [item_id]
-        );
-
         await client.query('COMMIT');
         return res.rows[0];
-    } catch (error) {
+    } catch (error) {        
         await client.query('ROLLBACK');
-        throw err;
+        throw error;        
     } finally {
         client.release();
     }

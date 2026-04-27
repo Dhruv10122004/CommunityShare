@@ -8,9 +8,12 @@ exports.createBooking = async (req, res) => {
         });
         return res.status(201).json(booking);
     } catch (error) {
+        if (error.message === 'Item is no longer available') {
+            return res.status(409).json({ message: error.message });
+        }
         return res.status(500).json({ message: error.message });
     }
-}
+};
 
 exports.updateBooking = async (req, res) => {
     try {
