@@ -2,6 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
+dotenv.config();
+
+const app = express();
+
 const authRoutes = require('./routes/authRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
@@ -10,13 +14,9 @@ const messageRoutes = require('./routes/messageRoutes');
 const catRoutes = require('./routes/catRoutes');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
-dotenv.config();
+app.set('trust proxy', 1);
 
-const app = express();
-
-// Debug: allow all origins first
 app.use(cors());
-
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
