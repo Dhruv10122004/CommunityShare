@@ -1,4 +1,4 @@
-const redis = require('../config/redisConfig');
+const { redis, redisReady } = require('../config/redisConfig');
 
 const getCacheKey = (req) => {
   return `cache:${req.originalUrl}:${JSON.stringify(req.query || {})}`;
@@ -9,9 +9,10 @@ exports.cacheResponse = (ttlSeconds = 60) => async (req, res, next) => {
     return next();
   }
 
-  const key = getCacheKey(req);
-
   try {
+    await redisReady;
+
+    const key = getCacheKey(req);
     const cached = await redis.get(key);
     if (cached) {
       return res.json(JSON.parse(cached));
